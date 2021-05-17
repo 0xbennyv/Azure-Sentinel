@@ -3,8 +3,10 @@
     "contentVersion": "1.0.0.0",
       "parameters": {
           "FunctionName": {
-              "defaultValue": "Sophos Central Alerts and Event Collector",
-              "type": "string"
+            "defaultValue": "<enter a default Function Name>",
+            "minLength": 1,
+            "maxLength": 11,
+            "type": "string"
           },  
           "WorkspaceID": {
               "type": "string",
