@@ -1,0 +1,81 @@
+{
+    "id": "SophosCentralConnector",
+    "title": "Sophos Central Connector",
+    "publisher": "Sohpos",
+    "descriptionMarkdown": "This connector is used to pull data into Azure Sentinel Log Analytics using Azure Functions from Sophos Central's common API's for alerts and events.",
+    "graphQueries": [],
+    "availability": {
+        "status": 1,
+        "isPreview": true
+    },
+    "permissions": {
+        "resourceProvider": [
+            {
+                "provider": "Microsoft.OperationalInsights/workspaces",
+                "permissionsDisplayText": "read and write permissions on the workspace are required.",
+                "providerDisplayName": "Workspace",
+                "scope": "Workspace",
+                "requiredPermissions": {
+                    "write": true,
+                    "read": true,
+                    "delete": true
+                }
+            },
+			{
+				"provider": "Microsoft.OperationalInsights/workspaces/sharedKeys",
+				"permissionsDisplayText": "read permissions to shared keys for the workspace are required. [See the documentation to learn more about workspace keys](https://docs.microsoft.com/azure/azure-monitor/platform/agent-windows#obtain-workspace-id-and-key).",
+				"providerDisplayName": "Keys",
+				"scope": "Workspace",
+				"requiredPermissions": {
+					"action": true
+				}
+			}
+        ],
+        "customs": []
+    },
+    "instructionSteps": [
+        {
+            "title": "",
+            "description": ">**NOTE:** This connector uses Azure Functions to connect to a Sophos Central to pull its logs into Azure Sentinel. This might result in additional data ingestion costs. Check the [Azure Functions pricing page](https://azure.microsoft.com/pricing/details/functions/) for details."
+        },
+        {
+            "title": "",
+            "description": "**STEP 1 Obtain a ClientId and ClientSecret from Sophos Central, details can be found here. https://developer.sophos.com/getting-started."
+        },
+        {
+            "title": "",
+            "description": "**STEP 2 - Choose ONE from the following two deployment options to deploy the connector and the associated Azure Function**\n\n>**IMPORTANT:** Before deploying the 'PROVIDER NAME APPLIANCE NAME' connector, have the Workspace ID  and Workspace Primary Key (can be copied from the following), as well as the 'PROVIDER NAME APPLIANCE NAME' API authorization key(s) or Token, readily available.",
+            "instructions": [
+                {
+                    "parameters": {
+                        "fillWith": [
+                            "WorkspaceId"
+                        ],
+                        "label": "Workspace ID"
+                    },
+                    "type": "CopyableLabel"
+                }
+            ]
+        },
+        {
+            "title": "",
+            "description": "**Option 1 - Azure Resource Manager (ARM) Template**\n\nUse this method for automated deployment of the Sophos Central connector.\n\n1. Click the **Deploy to Azure** button below. \n\n\t[![Deploy To Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAzure-Sentinel%2Fsophoscentralapi%2FDataConnectors%2FSophosCentralConnector%2Fazuredeploy_Connector_sophoscentralconnector_AzureFunction.json)\n2. Select the preferred **Subscription**, **Resource Group** and **Location**. \n3. Enter the **Workspace ID**, **Workspace Key**, **API Username**, **API Password**, 'and/or Other required fields'. \n>Note: If using Azure Key Vault secrets for any of the values above, use the`@Microsoft.KeyVault(SecretUri={Security Identifier})`schema in place of the string values. Refer to [Key Vault references documentation](https://docs.microsoft.com/azure/app-service/app-service-key-vault-references) for further details. \n4. Mark the checkbox labeled **I agree to the terms and conditions stated above**. \n5. Click **Purchase** to deploy."
+        }
+    ],
+    "metadata": {
+        "id": "Unique Identifier (GUID) used to identify dependencies and content from solutions or community.",
+        "version": "1.0.0",
+        "kind": "dataConnector",
+        "source": {
+            "kind": "community"
+        },
+        "author": {
+            "name": "Ben Verschaeren"
+        },
+        "support": {
+            "name": "SOPHOS Community",
+            "link": "https://community.sophos.com",
+            "tier": "developer"
+        }
+    }
+}

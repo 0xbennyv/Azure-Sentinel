@@ -1,0 +1,86 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+      "parameters": {
+          "FunctionName": {
+              "defaultValue": "Sophos Central Alerts and Event Collector",
+              "type": "string"
+          },  
+          "WorkspaceID": {
+              "type": "string",
+              "defaultValue": "<workspaceID>"
+          },
+          "WorkspaceKey": {
+              "type": "string",
+              "defaultValue": "<workspaceKey>"
+          },
+          "ClientID": {
+              "type": "string",
+              "defaultValue": ""
+          },
+          "ClientSecret": {
+              "type": "secureString",
+              "defaultValue": ""
+          }
+      },
+      "variables": {
+          "FunctionName": "[concat(toLower(parameters('FunctionName')), uniqueString(resourceGroup().id))]",
+          "StorageSuffix": "[environment().suffixes.storage]",
+          "LogAnaltyicsUri": "[replace(environment().portal, 'https://portal', concat('https://', toLower(parameters('WorkspaceID')), '.ods.opinsights'))]"
+      },
+      "resources": [         
+          {
+              "type": "Microsoft.Storage/storageAccounts",
+              "apiVersion": "2019-06-01",
+              "name": "[tolower(parameters('FunctionName'))]",
+              "location": "[resourceGroup().location]",
+              "sku": {
+                  "name": "Standard_LRS",
+                  "tier": "Standard"
+              },
+              "kind": "StorageV2",
+              "properties": {
+                  "networkAcls": {
+                      "bypass": "AzureServices",
+                      "virtualNetworkRules": [
+                      ],
+                      "ipRules": [
+                      ],
+                      "defaultAction": "Allow"
+                  },
+                  "supportsHttpsTrafficOnly": true,
+                  "encryption": {
+                      "services": {
+                          "file": {
+                              "keyType": "Account",
+                              "enabled": true
+                          },
+                          "blob": {
+                              "keyType": "Account",
+                              "enabled": true
+                          }
+                      },
+                      "keySource": "Microsoft.Storage"
+                  }
+              }
+          },
+          {
+              "type": "Microsoft.Web/serverfarms",
+              "apiVersion": "2018-02-01",
+              "name": "[parameters('FunctionName')]",
+              "location": "[resourceGroup().location]",
+              "sku": {
+                  "name": "Y1",
+                  "tier": "Dynamic"
+              },
+              "kind": "functionapp",
+              "properties": {
+                  "name": "[parameters('FunctionName')]",
+                  "workerSize": "0",
+                  "workerSizeId": "0",
+                  "numberOfWorkers": "1"
+              }
+          }
+      ]
+  }
+  
